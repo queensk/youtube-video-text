@@ -13,23 +13,18 @@ type ResponseData = {
 };
 
 export default function Home() {
-  const { register, handleSubmit, errors } = useForm<FormData>();
+  const { register, handleSubmit,  formState: { errors }, } = useForm<FormData>();
 
   const [data, setData] = useState<ResponseData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // define a function to handle the form submission
   const onSubmit = async (data: FormData) => {
     try {
-      // make a POST request to the /api/text route with the input URL as JSON data
       const response = await axios.post<ResponseData>("/api/text", data);
-      // set the response data to the state
       setData(response.data);
-      // clear any previous error
       setError(null);
     } catch (err) {
-      // handle any error and set it to the state
-      setError(err?.message);
+      setError((err as { message: string })?.message);
     }
   };
 
